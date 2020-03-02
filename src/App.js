@@ -1,25 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
+
+import { useName } from "./context";
+
+export function Nav() {
+  return (
+    <ul>
+      <li>
+        <Link to="/">Home</Link>
+      </li>
+      <li>
+        <Link to="/about">About</Link>
+      </li>
+      <li>
+        <Link to="/users">Users</Link>
+      </li>
+    </ul>
+  );
+}
+
+function Home() {
+  const nameContext = useName();
+
+  return (
+    <div>
+      <h1>Hello, {nameContext.name}</h1>
+      <p>{nameContext.user.email}</p>
+      <p>this is the home page</p>
+    </div>
+  );
+}
+
+export function About() {
+  const history = useHistory();
+
+  return (
+    <div>
+      <h1>this is the about page</h1>
+      <button onClick={() => history.push("users")}>Go to User Page</button>
+    </div>
+  );
+}
+
+function Users() {
+  return <h2>this is the users page</h2>;
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Nav />
+        <Switch>
+          <Route path="/about" component={About} />
+          <Route path="/users" component={Users} />
+          <Route path="/" component={Home} />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
