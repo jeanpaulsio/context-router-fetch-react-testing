@@ -2,7 +2,7 @@ import React from "react";
 import {
   render as rtlRender,
   fireEvent,
-  cleanup,
+  cleanup
 } from "@testing-library/react";
 import { useAsync } from "react-async";
 
@@ -26,11 +26,11 @@ afterEach(cleanup);
 
 test("App - loading state", () => {
   useAsync.mockImplementation(() => ({
-    isPending: true,
+    isPending: true
   }));
 
   const { getByText } = render(<App />, {
-    name: "pj",
+    name: "pj"
   });
 
   expect(getByText(/loading\.\.\./i)).toBeInTheDocument();
@@ -40,28 +40,50 @@ test("App - data has been fetched", () => {
   const user = { name: "jerry", email: "jerry@test.com" };
 
   useAsync.mockImplementation(() => ({
-    isPending: false,
+    isPending: false
   }));
 
   const { getByText } = render(<App />, {
     name: "pj",
-    user,
+    user
   });
 
   expect(getByText(/hello, pj/i)).toBeInTheDocument();
   expect(getByText(/jerry@test.com/i)).toBeInTheDocument();
 });
 
+test("App - clicking button increments counter in document title", () => {
+  const user = { name: "jerry", email: "jerry@test.com" };
+
+  useAsync.mockImplementation(() => ({
+    isPending: false
+  }));
+
+  const { getByText } = render(<App />, {
+    name: "pj",
+    user
+  });
+
+  expect(document.title).toMatch(/0 times/);
+
+  fireEvent.click(getByText("Increment"));
+  expect(document.title).toMatch(/1 times/);
+
+  fireEvent.click(getByText("Increment"));
+  fireEvent.click(getByText("Increment"));
+  expect(document.title).toMatch(/3 times/);
+});
+
 test("App - navigating around", () => {
   const user = { name: "jerry", email: "jerry@test.com" };
 
   useAsync.mockImplementation(() => ({
-    isPending: false,
+    isPending: false
   }));
 
   const { container, getByText } = render(<App />, {
     name: "pj",
-    user,
+    user
   });
 
   expect(getByText(/hello, pj/i)).toBeInTheDocument();

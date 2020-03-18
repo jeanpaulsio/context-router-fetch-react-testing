@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   Link,
-  useHistory,
+  useHistory
 } from "react-router-dom";
 
 import { useName } from "./context";
@@ -26,13 +26,21 @@ export function Nav() {
 }
 
 function Home() {
+  const [count, setCount] = React.useState(0);
+
   const nameContext = useName();
+
+  React.useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
 
   return (
     <div>
       <h1>Hello, {nameContext.name}</h1>
       <p>{nameContext.user.email}</p>
       <p>this is the home page</p>
+      <hr />
+      <button onClick={() => setCount(count + 1)}>Increment</button>
     </div>
   );
 }
